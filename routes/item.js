@@ -13,7 +13,7 @@ connection.connect(function (err) {
             if (err)throw err;
             // console.log(result)
             if (result.warningCount===0){
-                console.log("user created table")
+                console.log("item created table")
             }
         })
     }
@@ -41,7 +41,7 @@ router.post('/',(req,res)=>{
         if (err){
             res.send({'message':'duplicate Entry'})
         }else {
-            res.send({'message':'user created'})
+            res.send({'message':'item created'})
         }
     })
 
@@ -56,9 +56,9 @@ router.put('/',(req,res)=>{
     connection.query(query,[name,price,qty,id],(err,rows)=>{
         if (err) throw err;
         if (rows.affectedRows>0){
-            res.send({'message': 'user updated'})
+            res.send({'message': 'item updated'})
         }else {
-            res.send({'message': 'user not founded'})
+            res.send({'message': 'item not founded'})
         }
 
     })
@@ -70,9 +70,9 @@ router.delete('/:id',(req,res)=>{
     connection.query(query,[id],(err,rows)=>{
         if (err) throw err;
         if (rows.affectedRows>0){
-            res.send({'message':'user deleted'})
+            res.send({'message':'item deleted'})
         }else {
-            res.send({'message':'no such user'})
+            res.send({'message':'no such item'})
         }
     })
 })

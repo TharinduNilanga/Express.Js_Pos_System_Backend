@@ -8,12 +8,12 @@ connection.connect(function (err) {
         console.log(err)
     }else {
         console.log("connected to mysql");
-        var userTableQuery="CREATE TABLE IF NOT EXISTS `order` (id VARCHAR(255) PRIMARY KEY ,cusId VARCHAR(255) FOREIGN KEY REFERENCES ,price double,qty int(10))"
+        var userTableQuery="CREATE TABLE IF NOT EXISTS `order` (id VARCHAR(255) PRIMARY KEY ,cusId VARCHAR(255) FOREIGN KEY REFERENCES customer (id) ,date VARCHAR(255))"
         connection.query(userTableQuery,function (err,result) {
             if (err)throw err;
             // console.log(result)
             if (result.warningCount===0){
-                console.log("user created table")
+                console.log("Order created table")
             }
         })
     }
@@ -23,7 +23,7 @@ connection.connect(function (err) {
 const router=express.Router();
 
 router.get('/',(req,res)=>{
-    var query="SELECT * FROM item";
+    var query="SELECT * FROM  `order`";
     connection.query(query,(err,rows)=>{
         if (err)throw err;
         res.send(rows)
@@ -32,33 +32,32 @@ router.get('/',(req,res)=>{
 })
 router.post('/',(req,res)=>{
     const id=req.body.id;
-    const name=req.body.name;
-    const price=req.body.price;
-    const qty=req.body.qty;
+    const cusId=req.body.cusId;
+    const date=req.body.date;
 
-    var query="INSERT INTO item(id,name,price,qty) VALUES (?,?,?,?)";
-    connection.query(query,[id,name,price,qty],(err)=>{
+
+    var query="INSERT INTO  `order`(id,cusId,date) VALUES (?,?,?)";
+    connection.query(query,[id,cusId,date],(err)=>{
         if (err){
             res.send({'message':'duplicate Entry'})
         }else {
-            res.send({'message':'user created'})
+            res.send({'message':'Order created'})
         }
     })
 
 })
 router.put('/',(req,res)=>{
     const id=req.body.id;
-    const name=req.body.name;
-    const price=req.body.price;
-    const qty=req.body.qty;
+    const cusId=req.body.cusId;
+    const date=req.body.date;
 
-    var query="UPDATE item SET name=?,price=?,qty=? WHERE id=?";
-    connection.query(query,[name,price,qty,id],(err,rows)=>{
+    var query="UPDATE  `order` SET cusId=?,date=? WHERE id=?";
+    connection.query(query,[cusId,date,id],(err,rows)=>{
         if (err) throw err;
         if (rows.affectedRows>0){
-            res.send({'message': 'user updated'})
+            res.send({'message': 'Order updated'})
         }else {
-            res.send({'message': 'user not founded'})
+            res.send({'message': 'Order not founded'})
         }
 
     })
@@ -66,19 +65,19 @@ router.put('/',(req,res)=>{
 })
 router.delete('/:id',(req,res)=>{
     const id=req.params.id;
-    var query="DELETE FROM item WHERE id=?";
+    var query="DELETE FROM  `order` WHERE id=?";
     connection.query(query,[id],(err,rows)=>{
         if (err) throw err;
         if (rows.affectedRows>0){
-            res.send({'message':'user deleted'})
+            res.send({'message':'Order deleted'})
         }else {
-            res.send({'message':'no such user'})
+            res.send({'message':'no such Order'})
         }
     })
 })
 router.get('/:id',(req,res)=>{
     const id=req.params.id;
-    var query="SELECT * FROM item WHERE id=?";
+    var query="SELECT * FROM  `order` WHERE id=?";
     connection.query(query,[id],(err,rows)=>{
         if (err)throw err;
         res.send(rows)
