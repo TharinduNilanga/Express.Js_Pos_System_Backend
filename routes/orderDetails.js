@@ -1,6 +1,6 @@
 const express=require('express');
 const mysql = require('mysql')
-const db=require('../config/db.configs')
+const db=require('../configs/db.configs')
 const connection = mysql.createConnection(db.database)
 
 connection.connect(function (err) {
@@ -8,7 +8,7 @@ connection.connect(function (err) {
         console.log(err)
     }else {
         console.log("connected to mysql");
-        var userTableQuery="CREATE TABLE IF NOT EXISTS `orderDetails` (oId VARCHAR(255) FOREIGN KEY REFERENCES `order`(id),itemId VARCHAR(255) FOREIGN KEY REFERENCES item (id) ,total double,qtyOnHand int(10))"
+        var userTableQuery="CREATE TABLE IF NOT EXISTS `orderDetails` (oId VARCHAR(255) ,itemId VARCHAR(255),total double,qtyOnHand int(10),CONSTRAINT PRIMARY KEY (oId,itemId),CONSTRAINT FOREIGN KEY (oId) REFERENCES `order`(id),CONSTRAINT FOREIGN KEY (itemId) REFERENCES item(id))"
         connection.query(userTableQuery,function (err,result) {
             if (err)throw err;
             // console.log(result)
@@ -37,7 +37,7 @@ router.post('/',(req,res)=>{
     const qtyOnHand=req.body.qtyOnHand;
 
 
-    var query="INSERT INTO  `orderDetails`(oId,itemId,total,qtyOnHnd) VALUES (?,?,?,?)";
+    var query="INSERT INTO  `orderDetails`(oId,itemId,total,qtyOnHand) VALUES (?,?,?,?)";
     connection.query(query,[oId,itemId,total,qtyOnHand],(err)=>{
         if (err){
             res.send({'message':'duplicate Entry'})

@@ -1,6 +1,6 @@
 const express=require('express');
 const mysql = require('mysql')
-const db=require('../config/db.configs')
+const db=require('../configs/db.configs')
 const connection = mysql.createConnection(db.database)
 
 connection.connect(function (err) {

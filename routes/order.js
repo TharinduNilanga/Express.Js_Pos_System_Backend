@@ -1,6 +1,6 @@
 const express=require('express');
 const mysql = require('mysql')
-const db=require('../config/db.configs')
+const db=require('../configs/db.configs')
 const connection = mysql.createConnection(db.database)
 
 connection.connect(function (err) {
@@ -8,7 +8,7 @@ connection.connect(function (err) {
         console.log(err)
     }else {
         console.log("connected to mysql");
-        var userTableQuery="CREATE TABLE IF NOT EXISTS `order` (id VARCHAR(255) PRIMARY KEY ,cusId VARCHAR(255) FOREIGN KEY REFERENCES customer (id) ,date VARCHAR(255))"
+        var userTableQuery="CREATE TABLE IF NOT EXISTS `order` (id VARCHAR(255) PRIMARY KEY ,cusId VARCHAR(255) ,date VARCHAR(255),CONSTRAINT FOREIGN KEY (cusId) REFERENCES customer(id) )"
         connection.query(userTableQuery,function (err,result) {
             if (err)throw err;
             // console.log(result)
